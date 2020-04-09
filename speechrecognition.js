@@ -7,6 +7,33 @@ var ignore_onend;
 var start_timestamp;
 var recognition;
 
+function createResultsTable(results) {
+    var tbl = document.createElement('table');
+    var header = document.createElement('tr');
+    var left_head = document.createElement('th');
+    left_head.innerText = 'isFinal';
+    var rest_head = document.createElement('th');
+    rest_head.innerText = 'Transcript';
+    header.appendChild(left_head);
+    header.appendChild(rest_head);
+    tbl.appendChild(header)
+    for (const result of results) {
+        console.log(result);
+        var row = document.createElement('tr');
+        var first_cell = document.createElement('td');
+        first_cell.innerText = result.isFinal ? 'true' : 'false';
+        row.appendChild(first_cell);
+        // what are the non-zero elements???
+        for (const inner_result of result) {
+            var cell = document.createElement('td');
+            cell.innerText = inner_result.transcript;
+            row.appendChild(cell);
+        }
+        tbl.appendChild(row);
+    }
+    document.getElementById('results').appendChild(tbl);
+}
+
 function speechRecognitionLoad() {
     showInfo('');
     if (!('webkitSpeechRecognition' in window)) {
@@ -28,7 +55,6 @@ function speechRecognitionLoad() {
 		start_img.src = '//people.csail.mit.edu/jgross/tmp/test-speech-api/mic.gif';
 		showInfo('info_no_speech');
 		ignore_onend = true;
-		document.forms.e_form.e_input.readOnly = false;
 	    }
 	    if (event.error == 'audio-capture') {
 		start_img.src = '//people.csail.mit.edu/jgross/tmp/test-speech-api/mic.gif';
@@ -62,16 +88,7 @@ function speechRecognitionLoad() {
 	var last_call = undefined;
 
 	recognition.onresult = function(event) {
-            on_results_updated(event.results);
-          /*
-	    for (var i = event.resultIndex; i < event.results.length; ++i) {
-		if (event.results[i].isFinal) {
-		    final_transcript += event.results[i][0].transcript;
-		} else {
-		    interim_transcript += event.results[i][0].transcript;
-		}
-	    }
-*/
+            createResultsTable(event.results);
 	};
     }
 }
@@ -92,13 +109,10 @@ function startButton(event) {
     recognition.stop();
     return;
   }
-  recognition.lang = select_dialect.value;
+  //recognition.lang = select_dialect.value;
   recognition.start();
   ignore_onend = false;
-  // final_span.innerHTML = '';
-  // interim_span.innerHTML = '';
-  document.forms.e_form.e_input.readOnly = true;
-  start_img.src = '//jgross.scripts.mit.edu/whats-eliza-like/images/mic-slash.gif';
+    start_img.src = '//people.csail.mit.edu/jgross/tmp/test-speech-api/mic.gif';
   showInfo('info_allow');
   start_timestamp = event.timeStamp;
 }
@@ -120,4 +134,3 @@ function showInfo(s) {
     }
   }
 }
-
