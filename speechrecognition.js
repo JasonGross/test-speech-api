@@ -43,7 +43,7 @@ function speechRecognitionLoad() {
 	recognition.onstart = function() {
 	    recognizing = true;
             showInfo('');
-            start_button.innerText = 'Recording...';
+            start_button.innerText = 'Stop';
 	};
 
 	recognition.onerror = function(event) {
@@ -73,10 +73,6 @@ function speechRecognitionLoad() {
 		return;
 	    }
             start_button.innerText = 'Start';
-	    if (!final_transcript) {
-		showInfo('');
-		return;
-	    }
 	    showInfo('');
 	};
 
