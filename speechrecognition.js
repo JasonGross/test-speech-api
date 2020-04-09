@@ -109,7 +109,7 @@ function startButton(event) {
         recognition.stop();
         return;
     }
-    //recognition.lang = select_dialect.value;
+    recognition.lang = '';
     recognition.start();
     ignore_onend = false;
     start_button.innerText = 'Start';
