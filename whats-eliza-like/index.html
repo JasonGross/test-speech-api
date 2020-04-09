@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Eliza (What's that like?)</title>
+  <script src="//code.responsivevoice.org/responsivevoice.js"></script>
+  <script type="text/javascript" src="elizabot.js"></script>
+  <script type="text/javascript" src="eliza-whats-that-like-data.js"></script>
+  <script type="text/javascript" src="copyText.js"></script>
+  <script type="text/javascript" src="langs.js"></script>
+  <script type="text/javascript" src="elizarun.js"></script>
+  <script type="text/javascript" src="speechrecognition.js"></script>
+  <link rel="stylesheet" type="text/css" href="speechrecognition.css" />
+  <link rel="stylesheet" type="text/css" href="eliza.css" />
+</head>
+<body onload="preloadLanguages(); elizaLoad(); speechRecognitionLoad()">
+  <center>
+    <p></p>
+    <h3>Eliza asks: What's that like?</h3>
+    <table border=0>
+      <form name="e_form" onsubmit="elizaStep();return false">
+	<tr><td colspan=2>
+	    <div class="right">
+	      <div id="start_div">
+		<button type="button" id="start_button" onclick="startButton(event)">
+		  <img id="start_img" src="//jgross.scripts.mit.edu/whats-eliza-like/images/mic.gif" alt="Start"></button>
+	      </div>
+	    </div>
+	    <textarea readonly name="e_display" cols="60" rows="20"></textarea>
+	</td></tr>
+	<tr valign="middle">
+	  <td><input type="text" name="e_input" size="38"></td>
+	  <td align="right">
+	    <input type="submit" value="Talk">
+	    <input type="reset" value="Reset" onClick="window.setTimeout('elizaReset()',100)">
+	    <input type="button" value="Save" title="Copy the full log of the conversation to the clipboard" onclick="saveByCopy();">
+	  </td>
+	</tr>
+	<tr>
+	  <td colspan=2>
+	    <input type="checkbox" name="speak" id="speak" value="Speak" onchange="saveSettings();"><label for="speak"> Let Eliza use my speakers as </label>
+	    <select id="voiceselection" onchange="saveSettings();">
+	      <option value="UK English Female">UK English Female</option>
+	      <option value="UK English Male">UK English Male</option>
+	      <option value="US English Female">US English Female</option>
+	      <option value="Arabic Male">Arabic Male</option>
+	      <option value="Arabic Female">Arabic Female</option>
+	      <option value="Armenian Male">Armenian Male</option>
+	      <option value="Australian Female">Australian Female</option>
+	      <option value="Brazilian Portuguese Female">Brazilian Portuguese Female</option>
+	      <option value="Chinese Female">Chinese Female</option>
+	      <option value="Chinese (Hong Kong) Female">Chinese (Hong Kong) Female</option>
+	      <option value="Chinese Taiwan Female">Chinese Taiwan Female</option>
+	      <option value="Czech Female">Czech Female</option>
+	      <option value="Danish Female">Danish Female</option>
+	      <option value="Deutsch Female">Deutsch Female</option>
+	      <option value="Dutch Female">Dutch Female</option>
+	      <option value="Finnish Female">Finnish Female</option>
+	      <option value="French Female">French Female</option>
+	      <option value="Greek Female">Greek Female</option>
+	      <option value="Hindi Female">Hindi Female</option>
+	      <option value="Hungarian Female">Hungarian Female</option>
+	      <option value="Indonesian Female">Indonesian Female</option>
+	      <option value="Italian Female">Italian Female</option>
+	      <option value="Japanese Female">Japanese Female</option>
+	      <option value="Korean Female">Korean Female</option>
+	      <option value="Latin Female">Latin Female</option>
+	      <option value="Norwegian Female">Norwegian Female</option>
+	      <option value="Polish Female">Polish Female</option>
+	      <option value="Portuguese Female">Portuguese Female</option>
+	      <option value="Romanian Male">Romanian Male</option>
+	      <option value="Russian Female">Russian Female</option>
+	      <option value="Slovak Female">Slovak Female</option>
+	      <option value="Spanish Female">Spanish Female</option>
+	      <option value="Spanish Latin American Female">Spanish Latin American Female</option>
+	      <option value="Swedish Female">Swedish Female</option>
+	      <option value="Tamil Male">Tamil Male</option>
+	      <option value="Thai Female">Thai Female</option>
+	      <option value="Turkish Female">Turkish Female</option>
+	      <option value="Afrikaans Male">Afrikaans Male</option>
+	      <option value="Albanian Male">Albanian Male</option>
+	      <option value="Bosnian Male">Bosnian Male</option>
+	      <option value="Catalan Male">Catalan Male</option>
+	      <option value="Croatian Male">Croatian Male</option>
+	      <option value="Czech Male">Czech Male</option>
+	      <option value="Danish Male">Danish Male</option>
+	      <option value="Esperanto Male">Esperanto Male</option>
+	      <option value="Finnish Male">Finnish Male</option>
+	      <option value="Greek Male">Greek Male</option>
+	      <option value="Hungarian Male">Hungarian Male</option>
+	      <option value="Icelandic Male">Icelandic Male</option>
+	      <option value="Latin Male">Latin Male</option>
+	      <option value="Latvian Male">Latvian Male</option>
+	      <option value="Macedonian Male">Macedonian Male</option>
+	      <option value="Moldavian Male">Moldavian Male</option>
+	      <option value="Montenegrin Male">Montenegrin Male</option>
+	      <option value="Norwegian Male">Norwegian Male</option>
+	      <option value="Serbian Male">Serbian Male</option>
+	      <option value="Serbo-Croatian Male">Serbo-Croatian Male</option>
+	      <option value="Slovak Male">Slovak Male</option>
+	      <option value="Swahili Male">Swahili Male</option>
+	      <option value="Swedish Male">Swedish Male</option>
+	      <option value="Vietnamese Male">Vietnamese Male</option>
+	      <option value="Welsh Male">Welsh Male</option>
+	      <option value="US English Male">US English Male</option>
+	      <option value="Fallback UK Female">Fallback UK Female</option>
+	    </select>
+	  </td>
+      </form>
+    </table>
+  </center>
+  <div id="info">
+    <p id="info_start">Click on the microphone icon and begin speaking.</p>
+    <p id="info_speak_now">Speak now.</p>
+    <p id="info_no_speech">No speech was detected. You may need to adjust your
+      <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">
+	microphone settings</a>.</p>
+    <p id="info_no_microphone" style="display:none">
+      No microphone was found. Ensure that a microphone is installed and that
+      <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">
+	microphone settings</a> are configured correctly.</p>
+    <p id="info_allow">Click the "Allow" button above to enable your microphone.</p>
+    <p id="info_denied">Permission to use microphone was denied.</p>
+    <p id="info_blocked">Permission to use microphone is blocked. To change,
+      go to chrome://settings/contentExceptions#media-stream</p>
+    <p id="info_upgrade">Web Speech API is not supported by this browser.
+      Upgrade to <a href="//www.google.com/chrome">Chrome</a>
+      version 25 or later.</p>
+  </div>
+  <div id="div_language" class="hidden-setting">
+    <select id="select_language" onchange="updateCountry(); saveSettings()"></select>
+    &nbsp;&nbsp;
+    <select id="select_dialect" onchange="saveSettings()"></select>
+  </div>
+  <div class="hidden-setting">
+    <label for="wait_ms">Wait <input type="number" id="wait_ms" value="0" onchange="saveSettings()">ms before autosubmitting spoken input.  1000 ms is 1 second.  Use a negative number to require manual submission.</label>
+  </div>
+  <p>
+    ELIZA is a natural language conversation program described by Joseph Weizenbaum in January 1966.
+    This version plays that "what's that like?" game; the goal is to give you the opportunity to look more deeply into what your experience is like.
+  </p>
+  <p>
+    This instantiation is based on <tt>elizabot.js</tt> by &copy; Norbert Landsteiner 2005 at <a href="http://www.masswerk.at/elizabot" target="_blank">http://www.masswerk.at/elizabot</a>.<br>
+    The implementation is, at present, largely unchanged from that one, while the data driving what the system says was written by Jason Gross.
+  </p>
+  <p>
+    The source for this project is available <a href="https://github.com/JasonGross/whats-eliza-like" target="_blank">on GitHub</a>.
+  </p>
+  <p>
+    Feedback, comments, suggestions, bug reports, and appreciations welcome <a href="mailto:jgross@mit.edu">by email</a> or <a href="https://github.com/JasonGross/whats-eliza-like" target="_blank">on GitHub</a>.
+  </p>
+</body>
+</html>
