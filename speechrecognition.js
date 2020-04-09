@@ -1,7 +1,3 @@
-var delayToSubmitInMilliseconds = 0;
-
-var results = [];
-var on_results_updated = (function () {});
 var recognizing = false;
 var ignore_onend;
 var start_timestamp;
@@ -31,7 +27,7 @@ function createResultsTable(results) {
         }
         tbl.appendChild(row);
     }
-    document.getElementById('results').appendChild(tbl);
+    document.getElementById('results').prepend(tbl);
 }
 
 function speechRecognitionLoad() {
@@ -78,7 +74,6 @@ function speechRecognitionLoad() {
 	    }
             start_button.innerText = 'Start';
 	    if (!final_transcript) {
-		// showInfo('info_start');
 		showInfo('');
 		return;
 	    }
