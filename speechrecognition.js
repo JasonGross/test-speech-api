@@ -47,17 +47,17 @@ function speechRecognitionLoad() {
 	recognition.onstart = function() {
 	    recognizing = true;
             showInfo('');
-	    start_img.src = '//people.csail.mit.edu/jgross/tmp/test-speech-api/mic-animate.gif';
+            start_button.innerText = 'Recording...';
 	};
 
 	recognition.onerror = function(event) {
 	    if (event.error == 'no-speech') {
-		start_img.src = '//people.csail.mit.edu/jgross/tmp/test-speech-api/mic.gif';
+                start_button.innerText = 'Start';
 		showInfo('info_no_speech');
 		ignore_onend = true;
 	    }
 	    if (event.error == 'audio-capture') {
-		start_img.src = '//people.csail.mit.edu/jgross/tmp/test-speech-api/mic.gif';
+                start_button.innerText = 'Start';
 		showInfo('info_no_microphone');
 		ignore_onend = true;
 	    }
@@ -76,7 +76,7 @@ function speechRecognitionLoad() {
 	    if (ignore_onend) {
 		return;
 	    }
-	    start_img.src = '//people.csail.mit.edu/jgross/tmp/test-speech-api/mic.gif';
+            start_button.innerText = 'Start';
 	    if (!final_transcript) {
 		// showInfo('info_start');
 		showInfo('');
@@ -94,43 +94,43 @@ function speechRecognitionLoad() {
 }
 
 function upgrade() {
-  start_button.style.visibility = 'hidden';
-  showInfo('info_upgrade');
+    start_button.style.visibility = 'hidden';
+    showInfo('info_upgrade');
 }
 
 var two_line = /\n\n/g;
 var one_line = /\n/g;
 function linebreak(s) {
-  return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
+    return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
 }
 
 function startButton(event) {
-  if (recognizing) {
-    recognition.stop();
-    return;
-  }
-  //recognition.lang = select_dialect.value;
-  recognition.start();
-  ignore_onend = false;
-    start_img.src = '//people.csail.mit.edu/jgross/tmp/test-speech-api/mic.gif';
-  showInfo('info_allow');
-  start_timestamp = event.timeStamp;
+    if (recognizing) {
+        recognition.stop();
+        return;
+    }
+    //recognition.lang = select_dialect.value;
+    recognition.start();
+    ignore_onend = false;
+    start_button.innerText = 'Start';
+    showInfo('info_allow');
+    start_timestamp = event.timeStamp;
 }
 
 function showInfo(s) {
-  if (s) {
-    for (var child = info.firstChild; child; child = child.nextSibling) {
-      if (child.style) {
-        child.style.display = child.id == s ? 'inline' : 'none';
-      }
+    if (s) {
+        for (var child = info.firstChild; child; child = child.nextSibling) {
+            if (child.style) {
+                child.style.display = child.id == s ? 'inline' : 'none';
+            }
+        }
+        info.style.visibility = 'visible';
+    } else {
+        info.style.visibility = 'hidden';
+        for (var child = info.firstChild; child; child = child.nextSibling) {
+            if (child.style) {
+                child.style.display = 'none';
+            }
+        }
     }
-    info.style.visibility = 'visible';
-  } else {
-    info.style.visibility = 'hidden';
-    for (var child = info.firstChild; child; child = child.nextSibling) {
-      if (child.style) {
-        child.style.display = 'none';
-      }
-    }
-  }
 }
